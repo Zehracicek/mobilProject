@@ -33,3 +33,26 @@ Ana sayfa tasarımı
 Drawer/Navigation
 Widget'lar (custom button, card vb.)
 Theme ayarları
+
+---
+
+## Provider + SharedPreferences ile Basit Not Uygulaması (CRUD)
+
+Bu projede örnek olarak `Note` modeli ve `NoteService` (Provider kullanan) eklendi. Veriler veritabanı yerine `SharedPreferences` içinde JSON olarak saklanır.
+
+### Gerekli paketler (pubspec.yaml altında `dependencies`):
+
+```
+provider: ^6.0.0
+shared_preferences: ^2.0.0
+```
+
+### Nasıl çalıştırılır
+
+1. `pubspec.yaml` dosyanıza üstteki paketleri ekleyin ve `flutter pub get` çalıştırın.
+2. Uygulamayı çalıştırın: `flutter run` veya VS Code/Android Studio içinde Run.
+3. Uygulama başlarken `NoteService` `SharedPreferences`'tan notları yükler ve her CRUD işleminde otomatik kaydeder.
+
+---
+
+Not: `Note` modelinde `id`, `baslik`, `icerik`, `olusturmaTarihi` bulunur; `toJson` ve `fromJson` metodları ile serileştirme yapılır.
