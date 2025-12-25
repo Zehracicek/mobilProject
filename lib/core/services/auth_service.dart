@@ -42,8 +42,9 @@ class AuthService {
         'username': username,
         'email': email,
         'password': password, // Normalde hash'lenmeli!
-        'createdAt': DateTime.now().millisecondsSinceEpoch,
+        'createdAt': DateTime.now().toIso8601String(), // ISO formatında sakla
       });
+
 
       // Token ve kullanıcı bilgilerini local storage'a kaydet
       await _saveUserSession(user.copyWith(token: token), token);
