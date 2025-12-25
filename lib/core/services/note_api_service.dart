@@ -1,109 +1,126 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../models/note_model.dart';
 import 'http_service.dart';
 import 'local_storage_service.dart';
+import 'database_helper.dart';
 
-/// Not API servisi
-/// HTTP servisini kullanarak not CRUD işlemlerini gerçekleştirir
 class NoteApiService {
-  // Singleton instance
   static final NoteApiService instance = NoteApiService._init();
 
   final HttpService _httpService = HttpService.instance;
   final LocalStorageService _localStorage = LocalStorageService.instance;
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
   NoteApiService._init();
 
-  /// Auth token'ı al
   String? _getToken() {
     return _localStorage.getString(LocalStorageService.keyAuthToken);
   }
 
-  /// Tüm notları API'den getir
-  /// TODO: Kişi 3 - Gerçek API endpoint'i ile test edin
+  int? _getCurrentUserId() {
+    return _localStorage.getInt(LocalStorageService.keyUserId);
+  }
+
   Future<List<NoteModel>> fetchNotes() async {
     try {
-      final response = await _httpService.get(
-        '/notes',
-        token: _getToken(),
-      );
+      final userId = _getCurrentUserId();
+      if (userId == null) throw Exception('Kullanıcı oturumu bulunamadı');
 
-      final notesJson = response['data'] as List;
-      return notesJson
-          .map((json) => NoteModel.fromJson(json as Map<String, dynamic>))
-          .toList();
+      if (kIsWeb) {
+        final allNotes = await _localStorage.getObjectList('web_notes');
+        final userNotes = allNotes
+            .where((n) => n['userId'] == userId)
+            .map((e) => NoteModel.fromJson(e))
+            .toList();
+            
+        userNotes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        return userNotes;
+      }
+
+      return await _dbHelper.getNotesByUserId(userId);
     } catch (e) {
       throw Exception('Notlar getirilemedi: $e');
     }
   }
 
-  /// Yeni not oluştur (API'ye gönder)
-  /// TODO: Kişi 3 - Gerçek API endpoint'i ile test edin
   Future<NoteModel> createNote(NoteModel note) async {
     try {
-      final response = await _httpService.post(
-        '/notes',
-        body: note.toJson(),
-        token: _getToken(),
-      );
+      if (kIsWeb) {
+        final allNotes = await _localStorage.getObjectList('web_notes');
+        
+        final newId = DateTime.now().millisecondsSinceEpoch;
+        final newNote = note.copyWith(id: newId).toJson();
+        
+        allNotes.add(newNote);
+        await _localStorage.setObjectList('web_notes', allNotes);
+        
+        return NoteModel.fromJson(newNote);
+      }
 
-      return NoteModel.fromJson(response['data'] as Map<String, dynamic>);
+      final id = await _dbHelper.insertNote(note);
+      return note.copyWith(id: id);
     } catch (e) {
       throw Exception('Not oluşturulamadı: $e');
     }
   }
 
-  /// Notu güncelle (API'de)
-  /// TODO: Kişi 3 - Gerçek API endpoint'i ile test edin
   Future<NoteModel> updateNote(NoteModel note) async {
     try {
-      final response = await _httpService.put(
-        '/notes/${note.id}',
-        body: note.toJson(),
-        token: _getToken(),
-      );
+      if (kIsWeb) {
+        final allNotes = await _localStorage.getObjectList('web_notes');
+        final index = allNotes.indexWhere((n) => n['id'] == note.id);
+        
+        if (index != -1) {
+          allNotes[index] = note.toJson();
+          await _localStorage.setObjectList('web_notes', allNotes);
+        }
+        return note;
+      }
 
-      return NoteModel.fromJson(response['data'] as Map<String, dynamic>);
+      await _dbHelper.updateNote(note);
+      return note;
     } catch (e) {
       throw Exception('Not güncellenemedi: $e');
     }
   }
 
-  /// Notu sil (API'den)
-  /// TODO: Kişi 3 - Gerçek API endpoint'i ile test edin
   Future<void> deleteNote(int noteId) async {
     try {
-      await _httpService.delete(
-        '/notes/$noteId',
-        token: _getToken(),
-      );
+      if (kIsWeb) {
+        final allNotes = await _localStorage.getObjectList('web_notes');
+        allNotes.removeWhere((n) => n['id'] == noteId);
+        await _localStorage.setObjectList('web_notes', allNotes);
+        return;
+      }
+
+      await _dbHelper.deleteNote(noteId);
     } catch (e) {
       throw Exception('Not silinemedi: $e');
     }
   }
 
-  /// Belirli bir notu ID ile getir
-  /// TODO: Kişi 3 - Gerçek API endpoint'i ile test edin
   Future<NoteModel> fetchNoteById(int noteId) async {
     try {
-      final response = await _httpService.get(
-        '/notes/$noteId',
-        token: _getToken(),
-      );
+      if (kIsWeb) {
+         final allNotes = await _localStorage.getObjectList('web_notes');
+         final noteMap = allNotes.firstWhere(
+           (n) => n['id'] == noteId,
+           orElse: () => {},
+         );
+         
+         if (noteMap.isEmpty) throw Exception('Not bulunamadı (Web)');
+         return NoteModel.fromJson(noteMap);
+      }
 
-      return NoteModel.fromJson(response['data'] as Map<String, dynamic>);
+      final note = await _dbHelper.getNoteById(noteId);
+      if (note == null) throw Exception('Not bulunamadı');
+      return note;
     } catch (e) {
       throw Exception('Not getirilemedi: $e');
     }
   }
 
-  /// Notları senkronize et (local ve remote arasında)
-  /// TODO: Kişi 2 ile birlikte senkronizasyon mantığını geliştirin
   Future<void> syncNotes() async {
-    // Bu fonksiyon Kişi 2'nin database yönetimi ile entegre edilecek
-    // Örnek senkronizasyon mantığı:
-    // 1. API'den tüm notları çek
-    // 2. Local database'deki notları kontrol et
-    // 3. Farklılıkları güncelle
-    throw UnimplementedError('Senkronizasyon Kişi 2 ile birlikte tamamlanacak');
+    return;
   }
 }

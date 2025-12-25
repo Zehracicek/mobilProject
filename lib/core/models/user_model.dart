@@ -1,12 +1,10 @@
-/// Kullanıcı veri modeli
-/// Authentication ve kullanıcı yönetimi için kullanılacak
 class UserModel {
-  final int? id; // Kullanıcı ID'si
-  final String username; // Kullanıcı adı
-  final String email; // Email adresi
-  final String? password; // Şifre (sadece kayıt/giriş sırasında kullanılır)
-  final String? token; // Auth token (giriş sonrası)
-  final DateTime? createdAt; // Kayıt tarihi
+  final int? id;
+  final String username;
+  final String email;
+  final String? password;
+  final String? token;
+  final DateTime? createdAt;
 
   UserModel({
     this.id,
@@ -17,7 +15,6 @@ class UserModel {
     this.createdAt,
   });
 
-  /// JSON'dan UserModel oluştur (API response için)
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as int?,
@@ -31,7 +28,6 @@ class UserModel {
     );
   }
 
-  /// UserModel'i JSON'a dönüştür (API request için)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -43,7 +39,6 @@ class UserModel {
     };
   }
 
-  /// Local storage için basit map dönüşümü
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -54,7 +49,6 @@ class UserModel {
     };
   }
 
-  /// Map'den UserModel oluştur (local storage için)
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: map['id'] as int?,
@@ -67,7 +61,6 @@ class UserModel {
     );
   }
 
-  /// Kullanıcı kopyalama (güncelleme için kullanışlı)
   UserModel copyWith({
     int? id,
     String? username,
