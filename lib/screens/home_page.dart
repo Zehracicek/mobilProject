@@ -4,6 +4,7 @@ import '../widgets/note_card.dart';
 import '../widgets/custom_button.dart';
 import '../providers/note_provider.dart';
 import '../providers/auth_provider.dart';
+import '../utils/category.dart' as models;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

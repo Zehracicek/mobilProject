@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../screens/login_page.dart';
-import '../screens/register_page.dart';
-import '../screens/home_page.dart';
+import '../../screens/login_page.dart';
+import '../../screens/register_page.dart';
+import '../../screens/home_page.dart';
 
 class AppRoutes {
   static const String login = '/';

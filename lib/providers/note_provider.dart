@@ -1,18 +1,18 @@
 // Note Provider - CRUD ekibi bu dosyayı geliştirecek
 import 'package:flutter/foundation.dart';
-import '../models/note.dart';
-import '../models/category.dart';
+import '../utils/note.dart';
+import '../utils/category.dart' as models;
 
 class NoteProvider with ChangeNotifier {
   List<Note> _notes = [];
-  List<Category> _categories = [];
+  List<models.Category> _categories = [];
   bool _isLoading = false;
   String _searchQuery = '';
   int? _selectedCategoryId;
 
   // Getters
   List<Note> get notes => _filteredNotes;
-  List<Category> get categories => _categories;
+  List<models.Category> get categories => _categories;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
   int? get selectedCategoryId => _selectedCategoryId;
@@ -89,7 +89,7 @@ class NoteProvider with ChangeNotifier {
   Future<void> loadCategories() async {
     try {
       // TODO: SQLite'tan kategorileri yükle
-      _categories = Category.getDefaultCategories();
+      _categories = models.Category.getDefaultCategories();
       // ID'leri manuel olarak atayalım
       for (int i = 0; i < _categories.length; i++) {
         _categories[i] = _categories[i].copyWith(id: i + 1);
