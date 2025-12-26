@@ -27,12 +27,9 @@ Kategorilere göre filtreleme, arama, not ekleme/düzenleme/silme gibi temel iht
 
 ## 📸 Ekran Görüntüleri
 
-<img width="788" height="1391" alt="Ekran görüntüsü 2025-12-26 081704" src="https://github.com/user-attachments/assets/5e8fb08f-5a26-445d-9984-d74d6afbefc4" />
-<img width="790" height="1392" alt="Ekran görüntüsü 2025-12-26 081716" src="https://github.com/user-attachments/assets/5f21cf20-1b43-4ab0-9a92-13db107aa2f9" />
-<img width="793" height="1395" alt="Ekran görüntüsü 2025-12-26 081241" src="https://github.com/user-attachments/assets/46c9b493-27fd-49b3-8e4b-9de5fa65bf3d" />
-<img width="792" height="1396" alt="Ekran görüntüsü 2025-12-26 081804" src="https://github.com/user-attachments/assets/7cb622cb-3960-4a8e-b618-1663fa029b79" />
-<img width="793" height="1395" alt="Ekran görüntüsü 2025-12-26 082118" src="https://github.com/user-attachments/assets/1bf7813c-27da-4c24-bc90-d1d9469d8895" />
-<img width="794" height="1398" alt="Ekran görüntüsü 2025-12-26 082105" src="https://github.com/user-attachments/assets/0be984bb-a298-49f1-a715-10402e4aa618" />
+<img width="642" height="1089" alt="Ekran görüntüsü 2025-12-26 084108" src="https://github.com/user-attachments/assets/ea004044-e09f-42b2-8bb4-4b04570a8d80" />
+
+<img width="720" height="632" alt="Ekran görüntüsü 2025-12-26 084149" src="https://github.com/user-attachments/assets/2b9e28d3-2126-4bfe-909e-58e6dd68647c" />
 
 
 ## 📦 Kurulum
